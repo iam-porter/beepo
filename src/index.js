@@ -8,9 +8,14 @@ function stopInterval() {
   clearInterval(countdownInterval);
 }
 
-function resetInterval() {
+function resetCountdownTimer() {
   clearInterval(countdownInterval);
   countdownTimer();
+}
+
+function stopSession() {
+  clearInterval(countdownInterval);
+  timer.textContent = "00:25:00";
 }
 
 function countdownTimer() {
@@ -38,7 +43,7 @@ function countdownTimer() {
           baseSeconds = 10;
         }
 
-        resetInterval();
+        resetCountdownTimer();
       }
     } else {
       baseSeconds--;
@@ -55,27 +60,40 @@ function countdownTimer() {
 
 const logoBrand = document.createElement("img");
 const timer = document.createElement("time");
-const startButton = document.createElement("button");
+const buttonContainer = document.createElement("div");
+const startTimer = document.createElement("button");
+const stopTimer = document.createElement("button");
 
 logoBrand.setAttribute("src", "./public/logo-brand.svg");
 logoBrand.setAttribute("class", "logo-brand");
+buttonContainer.setAttribute("class", "button-container");
 timer.setAttribute("class", "pomodoro-timer");
-startButton.setAttribute("class", "start-button");
-startButton.textContent = "Start timer";
+startTimer.setAttribute("class", "button");
+stopTimer.setAttribute("class", "button");
+stopTimer.setAttribute("disabled", true);
 
+startTimer.textContent = "Start timer";
+stopTimer.textContent = "Stop timer";
 timer.textContent = "00:25:00";
 
 document.body.appendChild(logoBrand);
 document.body.appendChild(timer);
-document.body.appendChild(startButton);
+buttonContainer.appendChild(startTimer);
+buttonContainer.appendChild(stopTimer);
+document.body.appendChild(buttonContainer);
 
-// disable this button after clicking
-startButton.addEventListener("click", () => {
-  startButton.disabled = true;
+startTimer.addEventListener("click", () => {
+  startTimer.disabled = true;
+  stopTimer.disabled = false;
   countdownTimer();
 });
 
+stopTimer.addEventListener("click", () => {
+  stopSession();
+  startTimer.disabled = false;
+  stopTimer.disabled = true;
+});
+
 /* 
-    TODO: break timer (pomodoro), longer break timer (after 4th pomodoro),
-    and stop session. 
+    TODO: display streaks (pomodoro). 
 */
