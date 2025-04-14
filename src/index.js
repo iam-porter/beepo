@@ -1,26 +1,53 @@
 let baseMinutes = 0;
-let baseSeconds = 3;
+let baseSeconds = 5;
 let pomodoro = 0;
 let countdownInterval;
+let isBreak = false;
 
-function breakTimer() {}
+function stopInterval() {
+  clearInterval(countdownInterval);
+}
+
+function resetInterval() {
+  clearInterval(countdownInterval);
+  countdownTimer();
+}
 
 function countdownTimer() {
-  if (baseSeconds !== 0) {
-    baseSeconds--;
-  } else {
-    baseMinutes--;
-    baseSeconds = 59;
-  }
+  countdownInterval = setInterval(() => {
+    if (baseSeconds === 0) {
+      if (baseMinutes > 0) {
+        baseMinutes--;
+        baseSeconds = 59;
+      }
+    } else {
+      baseSeconds--;
+    }
 
-  if (baseMinutes === 0 && baseSeconds === 0) {
-    clearInterval(countdownInterval);
-  }
+    if (baseMinutes === 0 && baseSeconds === 0) {
+      stopInterval();
 
-  const minutes = baseMinutes < 10 ? "0" + baseMinutes : baseMinutes;
-  const seconds = baseSeconds < 10 ? "0" + baseSeconds : baseSeconds;
+      if (!isBreak) {
+        isBreak = true;
+        pomodoro++;
+        baseMinutes = 0;
+        baseSeconds = 5;
+      } else {
+        isBreak = false;
+        baseMinutes = 0;
+        baseSeconds = 10;
+      }
 
-  timer.textContent = `00:${minutes}:${seconds}`;
+      resetInterval();
+    }
+
+    const minutes = baseMinutes < 10 ? "0" + baseMinutes : baseMinutes;
+    const seconds = baseSeconds < 10 ? "0" + baseSeconds : baseSeconds;
+
+    timer.textContent = `00:${minutes}:${seconds}`;
+  }, 1000);
+
+  console.log(pomodoro);
 }
 
 const logoBrand = document.createElement("img");
@@ -41,8 +68,8 @@ document.body.appendChild(startButton);
 
 // disable this button after clicking
 startButton.addEventListener("click", () => {
-  countdownInterval = setInterval(countdownTimer, 1000);
   startButton.disabled = true;
+  countdownTimer();
 });
 
 /* 
