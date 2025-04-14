@@ -19,26 +19,29 @@ function countdownTimer() {
       if (baseMinutes > 0) {
         baseMinutes--;
         baseSeconds = 59;
+      } else {
+        stopInterval();
+
+        if (!isBreak) {
+          isBreak = true;
+          pomodoro++;
+          if (pomodoro % 4 === 0) {
+            baseMinutes = 0;
+            baseSeconds = 30;
+          } else {
+            baseMinutes = 0;
+            baseSeconds = 5;
+          }
+        } else {
+          isBreak = false;
+          baseMinutes = 0;
+          baseSeconds = 10;
+        }
+
+        resetInterval();
       }
     } else {
       baseSeconds--;
-    }
-
-    if (baseMinutes === 0 && baseSeconds === 0) {
-      stopInterval();
-
-      if (!isBreak) {
-        isBreak = true;
-        pomodoro++;
-        baseMinutes = 0;
-        baseSeconds = 5;
-      } else {
-        isBreak = false;
-        baseMinutes = 0;
-        baseSeconds = 10;
-      }
-
-      resetInterval();
     }
 
     const minutes = baseMinutes < 10 ? "0" + baseMinutes : baseMinutes;
@@ -47,7 +50,7 @@ function countdownTimer() {
     timer.textContent = `00:${minutes}:${seconds}`;
   }, 1000);
 
-  console.log(pomodoro);
+  console.log(pomodoro, isBreak);
 }
 
 const logoBrand = document.createElement("img");
