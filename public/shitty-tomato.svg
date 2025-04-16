@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" stroke-width="1" stroke-linecap="round" fill="none" width="10" height="10"
+    preserveAspectRatio="xMidYMid meet" viewBox="-19 -13 22 13">
+    <path stroke="#f10505" d="
+    M -10 0 
+    Q 0 0 -10 -1 
+    Q -20 -2 -7 -1.5
+    Q 5 -1.5 -8 -1.9
+    Q -25 -3 -7 -2.5
+    Q 8 -2.2 -8 -3.5
+    Q -25 -3 -7 -4
+    Q 8 -3 -8 -4.5
+    Q -25 -3.3 -7 -5" />
+    <path stroke="#fc1f1f" d="
+    M -7 -5
+    Q 8 -4.5 -8 -5
+    Q -25 -5 -7 -5.5
+    Q 8 -5.5 -8 -6
+    Q -25 -5.3 -7 -6.3
+    Q 8 -6.5 -8 -7
+    Q -25 -5 -7 -6
+    Q 8 -6.5 -8 -7
+    Q -22 -7 -7 -7.5" />
+    <path stroke="#fa4949" d="
+    M -7 -7.5
+    Q 7 -7.5 -8 -8
+    Q -18 -8 -7 -8.5
+    Q 3 -8.5 -8 -9
+    Q -13 -9 -8 -10" />
+    <!-- <path stroke="#fadada" d="
+    M -7 -7.5
+    Q 7 -6.0 -8 -6.7" /> -->
+    <path stroke="#20b420" d="
+    M -8 -10 
+    Q 3 -8.2 -8 -8.9" />
+    <path stroke="#12a112" d="
+    M -12 -8 
+    Q 7 -13 -13 -8.7" />
+    <path stroke="#19b419" d="
+    M -8 -10 
+    Q -2 -2 -11 -12.7" />
+    <path stroke-width="0.7" stroke="#551f1f" d="
+    M -8 -9.6 L -8 -9.6" />
+</svg>
