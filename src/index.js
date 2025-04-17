@@ -3,6 +3,27 @@ let baseSeconds = 5;
 let pomodoro = 0;
 let countdownInterval;
 let isBreak = false;
+let tomatoes = [];
+
+const topBar = document.createElement("div");
+const logoBrand = document.createElement("img");
+const timer = document.createElement("time");
+const buttonContainer = document.createElement("div");
+const startTimer = document.createElement("button");
+const stopTimer = document.createElement("button");
+const streakCount = document.createElement("span");
+
+topBar.setAttribute("class", "top-bar");
+logoBrand.setAttribute("src", "./public/logo-brand.svg");
+logoBrand.setAttribute("class", "logo-brand");
+streakCount.setAttribute("id", "streak-count");
+buttonContainer.setAttribute("class", "button-container");
+timer.setAttribute("class", "pomodoro-timer");
+startTimer.setAttribute("class", "button");
+startTimer.setAttribute("id", "start-timer");
+stopTimer.setAttribute("class", "button");
+stopTimer.setAttribute("id", "stop-timer");
+stopTimer.setAttribute("disabled", true);
 
 function stopInterval() {
   clearInterval(countdownInterval);
@@ -15,7 +36,9 @@ function resetCountdownTimer() {
 
 function stopSession() {
   clearInterval(countdownInterval);
+  pomodoro = 0;
   timer.textContent = "00:25:00";
+  streakCount.textContent = `streak: x0`;
 }
 
 function countdownTimer() {
@@ -30,6 +53,8 @@ function countdownTimer() {
         if (!isBreak) {
           isBreak = true;
           pomodoro++;
+          spawnTomato();
+          // spawnTomato();
           if (pomodoro % 4 === 0) {
             baseMinutes = 0;
             baseSeconds = 30;
@@ -42,7 +67,6 @@ function countdownTimer() {
           baseMinutes = 0;
           baseSeconds = 10;
         }
-
         resetCountdownTimer();
       }
     } else {
@@ -53,30 +77,43 @@ function countdownTimer() {
     const seconds = baseSeconds < 10 ? "0" + baseSeconds : baseSeconds;
 
     timer.textContent = `00:${minutes}:${seconds}`;
+    streakCount.textContent = `streak: x${pomodoro}`;
   }, 1000);
 
   console.log(pomodoro, isBreak);
 }
 
-const logoBrand = document.createElement("img");
-const timer = document.createElement("time");
-const buttonContainer = document.createElement("div");
-const startTimer = document.createElement("button");
-const stopTimer = document.createElement("button");
+function spawnTomato() {
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
 
-logoBrand.setAttribute("src", "./public/logo-brand.svg");
-logoBrand.setAttribute("class", "logo-brand");
-buttonContainer.setAttribute("class", "button-container");
-timer.setAttribute("class", "pomodoro-timer");
-startTimer.setAttribute("class", "button");
-stopTimer.setAttribute("class", "button");
-stopTimer.setAttribute("disabled", true);
+  const tomato = document.createElement("img");
+  const tomatoSize = 50; // 50x50
+  tomato.setAttribute("src", "./public/shitty-tomato.svg");
+  tomato.setAttribute("class", "tomato");
 
+  const randomX = Math.floor(Math.random() * (viewportWidth - tomatoSize));
+  const randomY = Math.floor(Math.random() * (viewportHeight - tomatoSize));
+
+  // should spawn within the viewport, not on the viewport.
+  tomato.style.left = randomX + "px";
+  tomato.style.top = randomY + "px";
+
+  document.body.appendChild(tomato);
+
+  tomatoes.push(tomato);
+}
+
+function collision() {}
+
+timer.textContent = "00:25:00";
 startTimer.textContent = "Start timer";
 stopTimer.textContent = "Stop timer";
-timer.textContent = "00:25:00";
+streakCount.textContent = `streak: x${pomodoro}`;
 
-document.body.appendChild(logoBrand);
+topBar.appendChild(logoBrand);
+topBar.appendChild(streakCount);
+document.body.appendChild(topBar);
 document.body.appendChild(timer);
 buttonContainer.appendChild(startTimer);
 buttonContainer.appendChild(stopTimer);
@@ -95,5 +132,5 @@ stopTimer.addEventListener("click", () => {
 });
 
 /* 
-    TODO: display streaks (pomodoro). 
+    TODO: make tomato bounce across the viewport. 
 */

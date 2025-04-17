@@ -1,5 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Rock+Salt&family=Sixtyfour&display=swap");
 /* main styles */
+:root {
+  --timer-font: "Sixtyfour";
+  --default-font: "Rock Salt";
+  --button-bg: #8d8d8d;
+}
+
 body {
   height: 100vh;
   width: 100vw;
@@ -8,23 +14,45 @@ body {
   justify-content: space-evenly;
   align-items: center;
   background-color: #1a1a1a;
+  position: relative;
 }
 
+.top-bar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  width: 100%;
+  align-items: center;
+}
+
+/* fixed at center */
 .logo-brand {
-  height: 85px;
-  width: 100px;
+  grid-column: 2;
+  margin: auto;
+  height: 5.3125rem;
+  width: 6.25rem;
+}
+
+/* right of logo-brand with a bit of gap (gap should not affect the position of logo-brand) */
+#streak-count {
+  grid-column: 3;
+  margin-left: 25rem;
+  color: white;
+  font-family: var(--default-font);
+  font-size: 3rem;
+  align-items: self-end;
+  letter-spacing: 0.625rem;
 }
 
 .pomodoro-timer {
-  font-family: "Sixtyfour";
+  font-family: var(--timer-font);
   color: white;
-  font-size: 128px;
+  font-size: 8rem;
   letter-spacing: 20%;
 }
 
 .button {
-  font-family: "Rock Salt";
-  font-size: 35px;
+  font-family: var(--default-font);
+  font-size: 2.5rem;
   color: white;
   border-style: none;
   background-color: transparent;
@@ -35,12 +63,28 @@ body {
   text-decoration: line-through;
 }
 
-.button:hover:enabled {
-  text-decoration: underline;
+.button:hover:enabled:not(#stop-timer) {
+  background-color: transparent;
+}
+
+.button:hover:enabled:not(#start-timer) {
+  color: red;
+  background-color: transparent;
+}
+
+#start-timer:enabled,
+#stop-timer:enabled {
+  background-color: var(--button-bg);
 }
 
 .button-container {
   width: 50%;
   display: flex;
   justify-content: space-around;
+}
+
+.tomato {
+  height: 3.125rem;
+  width: 3.125rem;
+  position: absolute;
 }
