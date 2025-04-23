@@ -1,9 +1,15 @@
-let baseMinutes = 0;
-let baseSeconds = 5;
+let baseMinutes = 25;
+let baseSeconds = 0;
 let pomodoro = 0;
+
+const viewportWidth = window.innerWidth;
+const viewportHeight = window.innerHeight;
+const tomatoSize = 50; // 50x50
+
 let countdownInterval;
 let isBreak = false;
 let tomatoes = [];
+let isAnimating = false;
 
 const topBar = document.createElement("div");
 const logoBrand = document.createElement("img");
@@ -39,6 +45,13 @@ function stopSession() {
   pomodoro = 0;
   timer.textContent = "00:25:00";
   streakCount.textContent = `streak: x0`;
+  tomatoes = [];
+  isAnimating = false;
+  const tomatoesOnScreen = document.getElementsByClassName("tomato");
+
+  for (let i = 0; i < tomatoesOnScreen.length; i++) {
+    tomatoesOnScreen[i].remove();
+  }
 }
 
 function countdownTimer() {
@@ -54,18 +67,23 @@ function countdownTimer() {
           isBreak = true;
           pomodoro++;
           spawnTomato();
-          // spawnTomato();
+
+          if (!isAnimating) {
+            animateTomato();
+            isAnimating = true;
+          }
+
           if (pomodoro % 4 === 0) {
-            baseMinutes = 0;
-            baseSeconds = 30;
+            baseMinutes = 15;
+            baseSeconds = 0;
           } else {
-            baseMinutes = 0;
-            baseSeconds = 5;
+            baseMinutes = 5;
+            baseSeconds = 0;
           }
         } else {
           isBreak = false;
-          baseMinutes = 0;
-          baseSeconds = 10;
+          baseMinutes = 25;
+          baseSeconds = 0;
         }
         resetCountdownTimer();
       }
@@ -80,31 +98,45 @@ function countdownTimer() {
     streakCount.textContent = `streak: x${pomodoro}`;
   }, 1000);
 
-  console.log(pomodoro, isBreak);
+  // console.log(pomodoro, isBreak);
 }
 
 function spawnTomato() {
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
-
   const tomato = document.createElement("img");
-  const tomatoSize = 50; // 50x50
   tomato.setAttribute("src", "./public/shitty-tomato.svg");
   tomato.setAttribute("class", "tomato");
 
   const randomX = Math.floor(Math.random() * (viewportWidth - tomatoSize));
   const randomY = Math.floor(Math.random() * (viewportHeight - tomatoSize));
 
-  // should spawn within the viewport, not on the viewport.
-  tomato.style.left = randomX + "px";
-  tomato.style.top = randomY + "px";
-
-  document.body.appendChild(tomato);
+  // this sets the initial position of the tomato.
+  tomato.posX = randomX;
+  tomato.posY = randomY;
+  tomato.dx = 1;
+  tomato.dy = -1;
 
   tomatoes.push(tomato);
+  document.body.appendChild(tomato);
 }
 
-function collision() {}
+function animateTomato() {
+  tomatoes.forEach((tomato) => {
+    if (tomato.posX >= viewportWidth - tomatoSize || tomato.posX <= 0) {
+      tomato.dx *= -1;
+    }
+    if (tomato.posY > viewportHeight - tomatoSize || tomato.posY <= 0) {
+      tomato.dy *= -1;
+    }
+
+    tomato.posX += tomato.dx;
+    tomato.posY += tomato.dy;
+
+    tomato.style.left = tomato.posX + "px";
+    tomato.style.top = tomato.posY + "px";
+  });
+
+  requestAnimationFrame(animateTomato);
+}
 
 timer.textContent = "00:25:00";
 startTimer.textContent = "Start timer";
@@ -132,5 +164,5 @@ stopTimer.addEventListener("click", () => {
 });
 
 /* 
-    TODO: make tomato bounce across the viewport. 
+    TODO: make logo clickable to change timer parameters. 
 */
