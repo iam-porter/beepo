@@ -10,7 +10,7 @@
 [data-theme="dark"] {
   --default-bg: #1a1a1a;
   --button-bg: #8d8d8d;
-  --text-color: white;
+  --text-color: #e0e0e0;
 }
 
 [data-theme="light"] {

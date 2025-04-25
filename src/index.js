@@ -183,5 +183,5 @@ logoBrand.addEventListener("click", () => {
 });
 
 /* 
-    TODO: add dark mode, edit/set timer (pomodoro, break, and long break). 
+    TODO: edit/set timer (pomodoro, break, and long break). 
 */
