@@ -64,6 +64,12 @@ body {
   letter-spacing: var(--default-letter-spacing);
 }
 
+.timer-actions-container {
+  width: 50%;
+  display: flex;
+  justify-content: space-around;
+}
+
 .button-reset {
   border-style: none;
   background-color: transparent;
@@ -100,7 +106,7 @@ body {
   background-color: transparent;
 }
 
-.button:hover:enabled:not(#start-timer, #close-dialog, #logo-button) {
+#stop-timer:hover:enabled {
   color: #d64a4a;
   background-color: transparent;
 }
@@ -110,10 +116,9 @@ body {
   background-color: var(--button-bg);
 }
 
-.button-container {
-  width: 50%;
+.adjust-timer {
   display: flex;
-  justify-content: space-around;
+  gap: 5rem;
 }
 
 .tomato {

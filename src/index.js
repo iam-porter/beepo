@@ -5,8 +5,8 @@ let pomodoro = 0;
 const viewportWidth = window.innerWidth;
 const viewportHeight = window.innerHeight;
 const tomatoSize = 50; // 50x50
-let currentTheme = document.documentElement.getAttribute("data-theme");
 
+let currentTheme = document.documentElement.getAttribute("data-theme");
 let countdownInterval;
 let isBreak = false;
 let tomatoes = [];
@@ -20,12 +20,34 @@ logoBrand.setAttribute("src", "./public/logo-light.svg");
 logoBrand.setAttribute("class", "logo-brand button");
 logoBrand.setAttribute("id", "logo-button");
 
+const timerContainer = document.createElement("span");
 const timer = document.createElement("time");
-timer.setAttribute("class", "pomodoro-timer");
+timerContainer.setAttribute("class", "pomodoro-timer");
 timer.textContent = "00:25:00";
 
-const buttonContainer = document.createElement("div");
-buttonContainer.setAttribute("class", "button-container");
+const adjustTimer = document.createElement("div");
+adjustTimer.setAttribute("class", "adjust-timer");
+const incrementByOne = document.createElement("button");
+incrementByOne.setAttribute("class", "button-reset button");
+incrementByOne.textContent = "+1";
+const incrementByFive = document.createElement("button");
+incrementByFive.setAttribute("class", "button-reset button");
+incrementByFive.textContent = "+5";
+const incrementByTen = document.createElement("button");
+incrementByTen.setAttribute("class", "button-reset button");
+incrementByTen.textContent = "+10";
+const decrementByOne = document.createElement("button");
+decrementByOne.setAttribute("class", "button-reset button");
+decrementByOne.textContent = "-1";
+const decrementByFive = document.createElement("button");
+decrementByFive.setAttribute("class", "button-reset button");
+decrementByFive.textContent = "-5";
+const decrementByTen = document.createElement("button");
+decrementByTen.setAttribute("class", "button-reset button");
+decrementByTen.textContent = "-10";
+
+const timerActions = document.createElement("div");
+timerActions.setAttribute("class", "timer-actions-container");
 
 const startTimer = document.createElement("button");
 startTimer.setAttribute("class", "button button-reset");
@@ -55,7 +77,7 @@ function stopSession() {
   clearInterval(countdownInterval);
   pomodoro = 0;
   timer.textContent = "00:25:00";
-  streakCount.textContent = `streak: x0`;
+  streakCount.textContent = `Streak: x0`;
   tomatoes = [];
   isAnimating = false;
   const tomatoesOnScreen = document.getElementsByClassName("tomato");
@@ -106,11 +128,15 @@ function countdownTimer() {
     const seconds = baseSeconds < 10 ? "0" + baseSeconds : baseSeconds;
 
     timer.textContent = `00:${minutes}:${seconds}`;
-    streakCount.textContent = `streak: x${pomodoro}`;
+    streakCount.textContent = `Streak: x${pomodoro}`;
   }, 1000);
 
   // console.log(pomodoro, isBreak);
 }
+
+function incrementTimer() {}
+
+function decrementTimer() {}
 
 function spawnTomato() {
   const tomato = document.createElement("img");
@@ -149,13 +175,29 @@ function animateTomato() {
   requestAnimationFrame(animateTomato);
 }
 
+// top icons
 topBar.appendChild(logoBrand);
 topBar.appendChild(streakCount);
+
+// timer
+timerContainer.appendChild(timer);
+
+// adjust timer button
+adjustTimer.appendChild(decrementByTen);
+adjustTimer.appendChild(decrementByFive);
+adjustTimer.appendChild(decrementByOne);
+adjustTimer.appendChild(incrementByOne);
+adjustTimer.appendChild(incrementByFive);
+adjustTimer.appendChild(incrementByTen);
+
+// timer actions
+timerActions.appendChild(startTimer);
+timerActions.appendChild(stopTimer);
+
 document.body.appendChild(topBar);
-document.body.appendChild(timer);
-buttonContainer.appendChild(startTimer);
-buttonContainer.appendChild(stopTimer);
-document.body.appendChild(buttonContainer);
+document.body.appendChild(timerContainer);
+document.body.appendChild(adjustTimer);
+document.body.appendChild(timerActions);
 
 startTimer.addEventListener("click", () => {
   startTimer.disabled = true;
