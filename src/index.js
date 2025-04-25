@@ -5,6 +5,7 @@ let pomodoro = 0;
 const viewportWidth = window.innerWidth;
 const viewportHeight = window.innerHeight;
 const tomatoSize = 50; // 50x50
+let currentTheme = document.documentElement.getAttribute("data-theme");
 
 let countdownInterval;
 let isBreak = false;
@@ -12,24 +13,34 @@ let tomatoes = [];
 let isAnimating = false;
 
 const topBar = document.createElement("div");
-const logoBrand = document.createElement("img");
-const timer = document.createElement("time");
-const buttonContainer = document.createElement("div");
-const startTimer = document.createElement("button");
-const stopTimer = document.createElement("button");
-const streakCount = document.createElement("span");
-
 topBar.setAttribute("class", "top-bar");
-logoBrand.setAttribute("src", "./public/logo-brand.svg");
-logoBrand.setAttribute("class", "logo-brand");
-streakCount.setAttribute("id", "streak-count");
-buttonContainer.setAttribute("class", "button-container");
+
+const logoBrand = document.createElement("img");
+logoBrand.setAttribute("src", "./public/logo-light.svg");
+logoBrand.setAttribute("class", "logo-brand button");
+logoBrand.setAttribute("id", "logo-button");
+
+const timer = document.createElement("time");
 timer.setAttribute("class", "pomodoro-timer");
-startTimer.setAttribute("class", "button");
+timer.textContent = "00:25:00";
+
+const buttonContainer = document.createElement("div");
+buttonContainer.setAttribute("class", "button-container");
+
+const startTimer = document.createElement("button");
+startTimer.setAttribute("class", "button button-reset");
 startTimer.setAttribute("id", "start-timer");
-stopTimer.setAttribute("class", "button");
+startTimer.textContent = "Start timer";
+
+const stopTimer = document.createElement("button");
+stopTimer.setAttribute("class", "button button-reset");
 stopTimer.setAttribute("id", "stop-timer");
 stopTimer.setAttribute("disabled", true);
+stopTimer.textContent = "Stop timer";
+
+const streakCount = document.createElement("span");
+streakCount.setAttribute("id", "streak-count");
+streakCount.textContent = `Streak: x${pomodoro}`;
 
 function stopInterval() {
   clearInterval(countdownInterval);
@@ -138,11 +149,6 @@ function animateTomato() {
   requestAnimationFrame(animateTomato);
 }
 
-timer.textContent = "00:25:00";
-startTimer.textContent = "Start timer";
-stopTimer.textContent = "Stop timer";
-streakCount.textContent = `streak: x${pomodoro}`;
-
 topBar.appendChild(logoBrand);
 topBar.appendChild(streakCount);
 document.body.appendChild(topBar);
@@ -163,6 +169,19 @@ stopTimer.addEventListener("click", () => {
   stopTimer.disabled = true;
 });
 
+// toggle dark mode
+logoBrand.addEventListener("click", () => {
+  if (currentTheme === "dark") {
+    document.documentElement.setAttribute("data-theme", "light");
+    currentTheme = "light";
+    logoBrand.setAttribute("src", "./public/logo-dark.svg");
+  } else {
+    document.documentElement.setAttribute("data-theme", "dark");
+    currentTheme = "dark";
+    logoBrand.setAttribute("src", "./public/logo-light.svg");
+  }
+});
+
 /* 
-    TODO: make logo clickable to change timer parameters. 
+    TODO: add dark mode, edit/set timer (pomodoro, break, and long break). 
 */

@@ -1,9 +1,22 @@
-@import url("https://fonts.googleapis.com/css2?family=Rock+Salt&family=Sixtyfour&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Rock+Salt&family=Sixtyfour&display=swap");
+
 /* main styles */
 :root {
   --timer-font: "Sixtyfour";
   --default-font: "Rock Salt";
+  --default-letter-spacing: 15%;
+}
+
+[data-theme="dark"] {
+  --default-bg: #1a1a1a;
   --button-bg: #8d8d8d;
+  --text-color: white;
+}
+
+[data-theme="light"] {
+  --default-bg: #e0e0e0;
+  --button-bg: #a09e9e;
+  --text-color: #413c3c;
 }
 
 body {
@@ -13,8 +26,9 @@ body {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  background-color: #1a1a1a;
+  background-color: var(--default-bg);
   position: relative;
+  color: var(--text-color);
 }
 
 .top-bar {
@@ -36,39 +50,58 @@ body {
 #streak-count {
   grid-column: 3;
   margin-left: 25rem;
-  color: white;
   font-family: var(--default-font);
-  font-size: 3rem;
+  font-size: 2rem;
   align-items: self-end;
-  letter-spacing: 0.625rem;
+  letter-spacing: 20%;
+  font-weight: var(--default-letter-spacing);
+  font-weight: bold;
 }
 
 .pomodoro-timer {
   font-family: var(--timer-font);
-  color: white;
   font-size: 8rem;
-  letter-spacing: 20%;
+  letter-spacing: var(--default-letter-spacing);
+}
+
+.button-reset {
+  border-style: none;
+  background-color: transparent;
 }
 
 .button {
   font-family: var(--default-font);
   font-size: 2.5rem;
-  color: white;
-  border-style: none;
+  background-color: var(--button-bg);
+  color: var(--text-color);
+}
+
+.logo-brand {
   background-color: transparent;
+}
+
+.button:hover {
+  cursor: pointer;
+  background-color: var(--button-bg);
 }
 
 .button:disabled {
   color: #b8b5b5;
   text-decoration: line-through;
+  cursor: not-allowed;
+  background-color: transparent;
+}
+
+.button:hover:disabled {
+  background-color: transparent;
 }
 
 .button:hover:enabled:not(#stop-timer) {
   background-color: transparent;
 }
 
-.button:hover:enabled:not(#start-timer) {
-  color: red;
+.button:hover:enabled:not(#start-timer, #close-dialog, #logo-button) {
+  color: #d64a4a;
   background-color: transparent;
 }
 
