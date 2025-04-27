@@ -13,12 +13,14 @@ let timerInterval;
 let isBreak = false;
 let tomatoes = [];
 let isAnimating = false;
+let shortBeep = new Audio("./public/sfx/short-break.wav");
+let longBeep = new Audio("./public/sfx/long-break.wav");
 
 const topBar = document.createElement("div");
 topBar.setAttribute("class", "top-bar");
 
 const logoBrand = document.createElement("img");
-logoBrand.setAttribute("src", "./public/logo-light.svg");
+logoBrand.setAttribute("src", "./public/imgs/logo-light.svg");
 logoBrand.setAttribute("class", "logo-brand button");
 logoBrand.setAttribute("id", "logo-button");
 
@@ -57,7 +59,7 @@ function stopInterval() {
 
 function resetCountdownTimer() {
   clearInterval(countdownInterval);
-  countdownTimer();
+  setTimeout(() => countdownTimer(), 3000);
 }
 
 function stopSession() {
@@ -105,13 +107,16 @@ function countdownTimer() {
           }
 
           if (pomodoro % 4 === 0) {
+            longBeep.play();
             baseMinutes = 15;
             baseSeconds = 0;
           } else {
+            longBeep.play();
             baseMinutes = 5;
             baseSeconds = 0;
           }
         } else {
+          shortBeep.play();
           isBreak = false;
           baseMinutes = 25;
           baseSeconds = 0;
@@ -186,7 +191,7 @@ function adjustTimer(event, element) {
 
 function spawnTomato() {
   const tomato = document.createElement("img");
-  tomato.setAttribute("src", "./public/shitty-tomato.svg");
+  tomato.setAttribute("src", "./public/imgs/shitty-tomato.svg");
   tomato.setAttribute("class", "tomato");
 
   const randomX = Math.floor(Math.random() * (viewportWidth - tomatoSize));
@@ -249,6 +254,7 @@ timerSeconds.addEventListener("wheel", (event) =>
 startTimer.addEventListener("click", () => {
   startTimer.disabled = true;
   stopTimer.disabled = false;
+  shortBeep.play();
   countdownTimer();
 });
 
@@ -263,14 +269,10 @@ logoBrand.addEventListener("click", () => {
   if (currentTheme === "dark") {
     document.documentElement.setAttribute("data-theme", "light");
     currentTheme = "light";
-    logoBrand.setAttribute("src", "./public/logo-dark.svg");
+    logoBrand.setAttribute("src", "./public/imgs/logo-dark.svg");
   } else {
     document.documentElement.setAttribute("data-theme", "dark");
     currentTheme = "dark";
-    logoBrand.setAttribute("src", "./public/logo-light.svg");
+    logoBrand.setAttribute("src", "./public/imgs/logo-light.svg");
   }
 });
-
-/* 
-    TODO: edit/set timer (pomodoro, break, and long break). 
-*/
