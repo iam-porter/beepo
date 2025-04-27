@@ -1,3 +1,4 @@
+let baseHours = 0;
 let baseMinutes = 25;
 let baseSeconds = 0;
 let pomodoro = 0;
@@ -8,6 +9,7 @@ const tomatoSize = 50; // 50x50
 
 let currentTheme = document.documentElement.getAttribute("data-theme");
 let countdownInterval;
+let timerInterval;
 let isBreak = false;
 let tomatoes = [];
 let isAnimating = false;
@@ -21,30 +23,15 @@ logoBrand.setAttribute("class", "logo-brand button");
 logoBrand.setAttribute("id", "logo-button");
 
 const timerContainer = document.createElement("span");
-const timer = document.createElement("time");
+const timerHours = document.createElement("time");
+const timerMinutes = document.createElement("time");
+const timerSeconds = document.createElement("time");
 timerContainer.setAttribute("class", "pomodoro-timer");
-timer.textContent = "00:25:00";
-
-const adjustTimer = document.createElement("div");
-adjustTimer.setAttribute("class", "adjust-timer");
-const incrementByOne = document.createElement("button");
-incrementByOne.setAttribute("class", "button-reset button");
-incrementByOne.textContent = "+1";
-const incrementByFive = document.createElement("button");
-incrementByFive.setAttribute("class", "button-reset button");
-incrementByFive.textContent = "+5";
-const incrementByTen = document.createElement("button");
-incrementByTen.setAttribute("class", "button-reset button");
-incrementByTen.textContent = "+10";
-const decrementByOne = document.createElement("button");
-decrementByOne.setAttribute("class", "button-reset button");
-decrementByOne.textContent = "-1";
-const decrementByFive = document.createElement("button");
-decrementByFive.setAttribute("class", "button-reset button");
-decrementByFive.textContent = "-5";
-const decrementByTen = document.createElement("button");
-decrementByTen.setAttribute("class", "button-reset button");
-decrementByTen.textContent = "-10";
+timerHours.textContent =
+  baseHours < 10 ? "0" + baseHours + ":" : baseHours + ":";
+timerMinutes.textContent =
+  baseMinutes < 10 ? "0" + baseMinutes + ":" : baseMinutes + ":";
+timerSeconds.textContent = baseSeconds < 10 ? "0" + baseSeconds : baseSeconds;
 
 const timerActions = document.createElement("div");
 timerActions.setAttribute("class", "timer-actions-container");
@@ -76,7 +63,14 @@ function resetCountdownTimer() {
 function stopSession() {
   clearInterval(countdownInterval);
   pomodoro = 0;
-  timer.textContent = "00:25:00";
+  baseHours = 0;
+  baseMinutes = 25;
+  baseSeconds = 0;
+  timerHours.textContent =
+    baseHours < 10 ? "0" + baseHours + ":" : baseHours + ":";
+  timerMinutes.textContent =
+    baseMinutes < 10 ? "0" + baseMinutes + ":" : baseMinutes + ":";
+  timerSeconds.textContent = baseSeconds < 10 ? "0" + baseSeconds : baseSeconds;
   streakCount.textContent = `Streak: x0`;
   tomatoes = [];
   isAnimating = false;
@@ -90,7 +84,11 @@ function stopSession() {
 function countdownTimer() {
   countdownInterval = setInterval(() => {
     if (baseSeconds === 0) {
-      if (baseMinutes > 0) {
+      if (baseHours > 0 && baseMinutes === 0) {
+        baseHours--;
+        baseMinutes = 59;
+        baseSeconds = 59;
+      } else if (baseMinutes > 0) {
         baseMinutes--;
         baseSeconds = 59;
       } else {
@@ -124,19 +122,67 @@ function countdownTimer() {
       baseSeconds--;
     }
 
-    const minutes = baseMinutes < 10 ? "0" + baseMinutes : baseMinutes;
+    const hours = baseHours < 10 ? "0" + baseHours + ":" : baseHours + ":";
+    const minutes =
+      baseMinutes < 10 ? "0" + baseMinutes + ":" : baseMinutes + ":";
     const seconds = baseSeconds < 10 ? "0" + baseSeconds : baseSeconds;
 
-    timer.textContent = `00:${minutes}:${seconds}`;
+    timerHours.textContent = `${hours}`;
+    timerMinutes.textContent = `${minutes}`;
+    timerSeconds.textContent = `${seconds}`;
+
     streakCount.textContent = `Streak: x${pomodoro}`;
   }, 1000);
 
   // console.log(pomodoro, isBreak);
 }
 
-function incrementTimer() {}
+function adjustTimer(event, element) {
+  event.preventDefault();
 
-function decrementTimer() {}
+  clearInterval(timerInterval);
+
+  timerInterval = setInterval(() => {
+    if (event.deltaY < 0) {
+      if (element === timerHours) {
+        if (baseHours < 99) {
+          baseHours++;
+        }
+      } else if (element === timerMinutes) {
+        if (baseMinutes < 59) {
+          baseMinutes++;
+        }
+      } else {
+        if (baseSeconds < 59) {
+          baseSeconds++;
+        }
+      }
+    } else {
+      if (element === timerHours) {
+        if (baseHours > 0) {
+          baseHours--;
+        }
+      } else if (element === timerMinutes) {
+        if (baseMinutes > 0) {
+          baseMinutes--;
+        }
+      } else {
+        if (baseSeconds > 0) {
+          baseSeconds--;
+        }
+      }
+    }
+
+    timerHours.textContent =
+      baseHours < 10 ? "0" + baseHours + ":" : baseHours + ":";
+    timerMinutes.textContent =
+      baseMinutes < 10 ? "0" + baseMinutes + ":" : baseMinutes + ":";
+    timerSeconds.textContent =
+      baseSeconds < 10 ? "0" + baseSeconds : baseSeconds;
+
+    clearInterval(timerInterval);
+  }, 100);
+}
 
 function spawnTomato() {
   const tomato = document.createElement("img");
@@ -180,15 +226,9 @@ topBar.appendChild(logoBrand);
 topBar.appendChild(streakCount);
 
 // timer
-timerContainer.appendChild(timer);
-
-// adjust timer button
-adjustTimer.appendChild(decrementByTen);
-adjustTimer.appendChild(decrementByFive);
-adjustTimer.appendChild(decrementByOne);
-adjustTimer.appendChild(incrementByOne);
-adjustTimer.appendChild(incrementByFive);
-adjustTimer.appendChild(incrementByTen);
+timerContainer.appendChild(timerHours);
+timerContainer.appendChild(timerMinutes);
+timerContainer.appendChild(timerSeconds);
 
 // timer actions
 timerActions.appendChild(startTimer);
@@ -196,8 +236,15 @@ timerActions.appendChild(stopTimer);
 
 document.body.appendChild(topBar);
 document.body.appendChild(timerContainer);
-document.body.appendChild(adjustTimer);
 document.body.appendChild(timerActions);
+
+timerHours.addEventListener("wheel", (event) => adjustTimer(event, timerHours));
+timerMinutes.addEventListener("wheel", (event) =>
+  adjustTimer(event, timerMinutes)
+);
+timerSeconds.addEventListener("wheel", (event) =>
+  adjustTimer(event, timerSeconds)
+);
 
 startTimer.addEventListener("click", () => {
   startTimer.disabled = true;

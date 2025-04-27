@@ -125,4 +125,5 @@ body {
   height: 3.125rem;
   width: 3.125rem;
   position: absolute;
+  z-index: -1;
 }
