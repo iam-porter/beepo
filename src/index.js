@@ -10,6 +10,7 @@ const tomatoSize = 50; // 50x50
 let currentTheme = document.documentElement.getAttribute("data-theme");
 let countdownInterval;
 let timerInterval;
+let timerTimeout;
 let isBreak = false;
 let tomatoes = [];
 let isAnimating = false;
@@ -53,29 +54,43 @@ const streakCount = document.createElement("span");
 streakCount.setAttribute("id", "streak-count");
 streakCount.textContent = `Streak: x${pomodoro}`;
 
-function stopInterval() {
+function cleanupTimer() {
   clearInterval(countdownInterval);
+  clearTimeout(timerTimeout);
 }
 
 function resetCountdownTimer() {
-  clearInterval(countdownInterval);
-  setTimeout(() => countdownTimer(), 3000);
+  cleanupTimer();
+  timerTimeout = setTimeout(() => countdownTimer(), 3000);
 }
 
 function stopSession() {
-  clearInterval(countdownInterval);
+  // stop timer countdown and timeout
+  cleanupTimer();
+
+  // reset streak count
   pomodoro = 0;
+
+  // reset timer to base values
   baseHours = 0;
   baseMinutes = 25;
   baseSeconds = 0;
+
+  // reset timer textContent to default
   timerHours.textContent =
     baseHours < 10 ? "0" + baseHours + ":" : baseHours + ":";
   timerMinutes.textContent =
     baseMinutes < 10 ? "0" + baseMinutes + ":" : baseMinutes + ":";
   timerSeconds.textContent = baseSeconds < 10 ? "0" + baseSeconds : baseSeconds;
   streakCount.textContent = `Streak: x0`;
+
+  // empty tomatoes array
   tomatoes = [];
+
+  // reset animation trigger
   isAnimating = false;
+
+  // removes tomatoes on screen
   const tomatoesOnScreen = document.querySelectorAll(".tomato");
 
   if (tomatoesOnScreen.length > 0) {
@@ -94,7 +109,7 @@ function countdownTimer() {
         baseMinutes--;
         baseSeconds = 59;
       } else {
-        stopInterval();
+        cleanupTimer();
 
         if (!isBreak) {
           isBreak = true;
@@ -121,6 +136,7 @@ function countdownTimer() {
           baseMinutes = 25;
           baseSeconds = 0;
         }
+
         resetCountdownTimer();
       }
     } else {
@@ -226,7 +242,7 @@ function animateTomato() {
   requestAnimationFrame(animateTomato);
 }
 
-// top icons
+// top bar
 topBar.appendChild(logoBrand);
 topBar.appendChild(streakCount);
 
