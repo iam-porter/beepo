@@ -76,10 +76,10 @@ function stopSession() {
   streakCount.textContent = `Streak: x0`;
   tomatoes = [];
   isAnimating = false;
-  const tomatoesOnScreen = document.getElementsByClassName("tomato");
+  const tomatoesOnScreen = document.querySelectorAll(".tomato");
 
-  for (let i = 0; i < tomatoesOnScreen.length; i++) {
-    tomatoesOnScreen[i].remove();
+  if (tomatoesOnScreen.length > 0) {
+    tomatoesOnScreen.forEach((item) => item.remove());
   }
 }
 
